@@ -48,6 +48,11 @@ public class Value {
     public void setMessages(List<Message> messages) {
         this.messages = messages;
     }
+
+    @Override
+    public String toString() {
+        return "Value{" + "messaging_product=" + messaging_product + ", metadata=" + metadata + ", contacts=" + contacts + ", messages=" + messages + '}';
+    }
     
     
 }

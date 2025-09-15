@@ -57,6 +57,11 @@ public class Message {
         this.text = text;
     }
 
+    @Override
+    public String toString() {
+        return "Message{" + "from=" + from + ", id=" + id + ", timestamp=" + timestamp + ", type=" + type + ", text=" + text + '}';
+    }
+
     
 
 }

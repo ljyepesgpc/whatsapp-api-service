@@ -40,7 +40,7 @@ public class WhatsAppWebhookController {
     
     @PostMapping
     public String recibirMensaje(@RequestBody WhatsAppWebhook webhook) {
-         System.out.println("Mensaje recibido");
+         System.out.println("Mensaje recibido"+ webhook.toString());
         if (webhook.getValue() != null &&
             webhook.getValue().getMessages() != null &&
             !webhook.getValue().getMessages().isEmpty()) {

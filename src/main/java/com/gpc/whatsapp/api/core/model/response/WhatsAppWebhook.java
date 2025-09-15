@@ -28,5 +28,10 @@ public class WhatsAppWebhook {
     public void setValue(Value value) {
         this.value = value;
     }
+
+    @Override
+    public String toString() {
+        return "WhatsAppWebhook{" + "field=" + field + ", value=" + value + '}';
+    }
     
 }
