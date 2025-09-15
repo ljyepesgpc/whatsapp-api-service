@@ -13,8 +13,8 @@ RUN mvn clean package -DskipTests
 # STAGE 2: Runtime
 # ============================
 FROM openjdk:8-jre-alpine
-
-RUN useradd -m spring
+# Crear usuario no root (Alpine usa adduser)
+RUN adduser -D -h /home/spring spring
 WORKDIR /app
 
 COPY --from=builder /app/target/*.jar app.jar
