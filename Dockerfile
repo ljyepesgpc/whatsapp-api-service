@@ -1,7 +1,7 @@
 # ============================
 # STAGE 1: Build
 # ============================
-FROM openjdk:8-jre-alpine
+FROM maven:3.9.6-eclipse-temurin-8 AS builder
 
 WORKDIR /app
 COPY pom.xml .
@@ -12,7 +12,7 @@ RUN mvn clean package -DskipTests
 # ============================
 # STAGE 2: Runtime
 # ============================
-FROM openjdk:8-jre-slim
+FROM openjdk:8-jre-alpine
 
 RUN useradd -m spring
 WORKDIR /app
