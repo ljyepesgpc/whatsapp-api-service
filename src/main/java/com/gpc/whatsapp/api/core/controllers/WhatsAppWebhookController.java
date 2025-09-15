@@ -40,6 +40,7 @@ public class WhatsAppWebhookController {
     
     @PostMapping
     public String recibirMensaje(@RequestBody WhatsAppWebhook webhook) {
+         System.out.println("Mensaje recibido");
         if (webhook.getValue() != null &&
             webhook.getValue().getMessages() != null &&
             !webhook.getValue().getMessages().isEmpty()) {
@@ -80,7 +81,7 @@ public class WhatsAppWebhookController {
             System.out.println("Respuesta de Meta: " + response.getBody());
 
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
     }
 }
