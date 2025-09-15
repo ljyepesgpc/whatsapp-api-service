@@ -1,0 +1,26 @@
+server.port: 42103
+#spring.application.name: WHATSAPP-API-SERVICE
+#eureka:
+#  client:
+#    serviceUrl:
+#      defaultZone: http://localhost:8761/eureka/
+
+spring.config.use-legacy-processing: true
+spring.output.ansi.enabled: ALWAYS
+
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+whatsapp:
+  name: WHATSAPP-API
+  url: https://graph.facebook.com/v14.0/
+
+feign.client.config.default.connectTimeout: 160000000
+feign.client.config.default.readTimeout: 160000000
+
+# configuracion log
+logging.config: config/logback.xml 
+
+
