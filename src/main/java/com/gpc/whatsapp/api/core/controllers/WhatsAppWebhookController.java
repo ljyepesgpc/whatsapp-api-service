@@ -30,16 +30,15 @@ public class WhatsAppWebhookController {
     }
     
     @PostMapping
-    public String recibirMensaje(@RequestParam("From") String from,
-                                 @RequestParam("Body") String body) {
-        String telefono = from.replace("whatsapp:", "");
+    public String recibirMensaje(@RequestBody String payload) {
+       
         String estado = "INICIO";//ConversacionManager.getEstado(telefono);
-        body = body.trim().toLowerCase();
+       
  
         switch (estado) {
             case "INICIO":
 //                ConversacionManager.setEstado(telefono, "MENU");
-                return "👋 Hola! ¿Desea *Registrar turno* o *Consultar turno*?";
+                return "? Hola! ¿Desea *Registrar turno* o *Consultar turno*?";
 // 
 //            case "MENU":
 //                if (body.contains("registrar")) {
@@ -81,7 +80,7 @@ public class WhatsAppWebhookController {
  
             default:
 //                ConversacionManager.reset(telefono);
-                return "No entendí 🤔, escriba *Hola* para comenzar.";
+                return "No entendí , escriba *Hola* para comenzar.";
         }
     }
 }
