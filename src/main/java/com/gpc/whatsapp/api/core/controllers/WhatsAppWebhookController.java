@@ -9,6 +9,7 @@ import com.gpc.whatsapp.api.core.model.response.Message;
 import com.gpc.whatsapp.api.core.model.response.Value;
 import com.gpc.whatsapp.api.core.model.response.WebhookEvent;
 import com.gpc.whatsapp.api.core.model.response.WhatsAppWebhook;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,7 +62,7 @@ public class WhatsAppWebhookController {
         String body = message.getText().getBody();
 
         System.out.println("Mensaje recibido de " + from + ": " + body);
-        enviarTexto(from, "hola mundo"+ body);
+        enviarTexto(from, "hola mundo" + body);
 
         return "OK";
     }
@@ -70,26 +71,64 @@ public class WhatsAppWebhookController {
         try {
             String url = "https://graph.facebook.com/v23.0/728695723670491/messages";
 
-            RestTemplate restTemplate = new RestTemplate();
+            // === Construcción del menú con botones ===
+            Map<String, Object> interactive = new HashMap<>();
+            interactive.put("type", "button");
 
-            Map<String, Object> body = new HashMap<>();
-            body.put("messaging_product", "whatsapp");
-            body.put("to", to);
+            Map<String, String> body = new HashMap<>();
+            body.put("text", "¿Qué deseas hacer?");
+            interactive.put("body", body);
 
-            Map<String, String> text = new HashMap<>();
-            text.put("body", mensaje);
+            Map<String, Object> action = new HashMap<>();
+            List<Map<String, Object>> buttons = new ArrayList<>();
 
-            body.put("text", text);
+            Map<String, Object> btn1 = new HashMap<>();
+            btn1.put("type", "reply");
+            btn1.put("reply", new HashMap<String, String>() {
+                {
+                    put("id", "registrar_turno");
+                    put("title", "Registrar turno");
+                }
+            });
+
+            Map<String, Object> btn2 = new HashMap<>();
+            btn2.put("type", "reply");
+            btn2.put("reply", new HashMap<String, String>() {
+                {
+                    put("id", "consultar_turno");
+                    put("title", "Consultar turno");
+                }
+            });
+
+            Map<String, Object> btn3 = new HashMap<>();
+            btn3.put("type", "reply");
+            btn3.put("reply", new HashMap<String, String>() {
+                {
+                    put("id", "salir");
+                    put("title", "Salir");
+                }
+            });
+
+            buttons.add(btn1);
+            buttons.add(btn2);
+            buttons.add(btn3);
+
+            action.put("buttons", buttons);
+            interactive.put("action", action);
+
+            Map<String, Object> message = new HashMap<>();
+            message.put("messaging_product", "whatsapp");
+            message.put("to", to);
+            message.put("type", "interactive");
+            message.put("interactive", interactive);
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
-            headers.setBearerAuth("EAFcSIOLmYFUBPT2D9MzDT4gu4xwCfk4j6XDT7xnZBiwYymweboKbZBK5A707CGm8yD5ZCSdIObIFrF23u1JZChMwVb9p39Nw0PH2gSx0DNixzgpUJHVTFegkF2zIZB7ltHRvx8fZAP5mkLZAK5T2ZClctZAfD0UavXLWZAlWXAkNy6qzNCrUI3tBKxowg3Lnef4ycvr48s65MBeZCoFyZB6tQ6EmC2PvG57ouETX2gh0ZAbmuRbeKDmsZD");
+            headers.setBearerAuth("EAFcSIOLmYFUBPUMZC8ZBI0KDVGocDr2joB51dkdZCdRbavpPT0s7ZCxD5CmTxBozoWBa0VxCD7zXy5vViK8KeZCoslfgLjeMIGA0M8DzXZABzyp6WFKBqMSVRSZB7ZBz0qZCZCglZAWibiXv5L4ZAZBVeFrinpaAupJEoFuKT9Ky8ww3HGvXzwTAdZA5MYePGDshnyv2bHcZBS0FnCZAbePIwhs5QppudOAZBLnmGr63QzDf4ZCHvUYZBpmKNoZD");
 
-            HttpEntity<Map<String, Object>> request = new HttpEntity<>(body, headers);
-
-            ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class
-            );
-
+            HttpEntity<Map<String, Object>> request = new HttpEntity<>(message, headers);
+            RestTemplate restTemplate = new RestTemplate();
+            ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
             System.out.println("Respuesta de Meta: " + response.getBody());
 
         } catch (Exception e) {
