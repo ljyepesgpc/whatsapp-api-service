@@ -1,7 +1,7 @@
 # ============================
 # STAGE 1: Build
 # ============================
-FROM maven:3.9.6-eclipse-temurin-8 AS builder
+FROM openjdk:8-jre-alpine
 
 WORKDIR /app
 COPY pom.xml .
@@ -22,4 +22,4 @@ COPY --from=builder /app/target/*.jar app.jar
 EXPOSE 8080
 USER spring
 
-ENTRYPOINT ["java","-jar","app.jar"]
+ENTRYPOINT ["java","-Xmx256m","-Xms128m","-jar","app.jar"]
