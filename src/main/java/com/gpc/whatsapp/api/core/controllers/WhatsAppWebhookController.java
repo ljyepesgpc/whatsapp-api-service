@@ -71,7 +71,7 @@ public class WhatsAppWebhookController {
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
-            headers.setBearerAuth("EAFcSIOLmYFUBPc5FMpgkdX6CpaQORnPtgXjPc1dr248ZA1eI3FxV4jA5t4uvUsYfIZBfsNDzC4qTF7okYheUPghAC2gH2m2JyncVk9FVtBDZCuSePRLVARDMSfAtUaHpZBjsSlvTWK26PbehF5n4feQlNuZCuZBgMkZBjkDVakDMB1cFCDxocMunWSkoow7ZC0iZAS8ZBQbrHRYIE4KO3uVezDgIev8YEkv8asOixRXUGnp1yubgZDZD");
+            headers.setBearerAuth("EAFcSIOLmYFUBPT2D9MzDT4gu4xwCfk4j6XDT7xnZBiwYymweboKbZBK5A707CGm8yD5ZCSdIObIFrF23u1JZChMwVb9p39Nw0PH2gSx0DNixzgpUJHVTFegkF2zIZB7ltHRvx8fZAP5mkLZAK5T2ZClctZAfD0UavXLWZAlWXAkNy6qzNCrUI3tBKxowg3Lnef4ycvr48s65MBeZCoFyZB6tQ6EmC2PvG57ouETX2gh0ZAbmuRbeKDmsZD");
 
             HttpEntity<Map<String, Object>> request = new HttpEntity<>(body, headers);
 
