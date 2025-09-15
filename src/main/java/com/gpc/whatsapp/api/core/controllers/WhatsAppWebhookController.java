@@ -5,6 +5,7 @@
 package com.gpc.whatsapp.api.core.controllers;
 
 import com.gpc.whatsapp.api.core.model.response.Message;
+import com.gpc.whatsapp.api.core.model.response.WebhookEvent;
 import com.gpc.whatsapp.api.core.model.response.WhatsAppWebhook;
 import java.util.HashMap;
 import java.util.Map;
@@ -39,13 +40,11 @@ public class WhatsAppWebhookController {
     }
     
     @PostMapping
-    public String recibirMensaje(@RequestBody WhatsAppWebhook webhook) {
+    public String recibirMensaje(@RequestBody WebhookEvent webhook) {
          System.out.println("Mensaje recibido"+ webhook.toString());
-        if (webhook.getValue() != null &&
-            webhook.getValue().getMessages() != null &&
-            !webhook.getValue().getMessages().isEmpty()) {
+        if (webhook.getEntry() != null && !webhook.getEntry().isEmpty()) {
 
-            Message message = webhook.getValue().getMessages().get(0);
+            Message message = webhook.getEntry().get(0).getChanges().get(0).getValue().getMessages().get(0);
             String from = message.getFrom();
             String body = message.getText().getBody();
 
