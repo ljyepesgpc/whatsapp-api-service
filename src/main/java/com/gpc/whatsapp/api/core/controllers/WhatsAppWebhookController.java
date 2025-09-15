@@ -31,14 +31,14 @@ public class WhatsAppWebhookController {
     
     @PostMapping
     public String recibirMensaje(@RequestBody String payload) {
-       
+       System.out.println("Mensaje entrante: " + payload);
         String estado = "INICIO";//ConversacionManager.getEstado(telefono);
        
  
         switch (estado) {
             case "INICIO":
 //                ConversacionManager.setEstado(telefono, "MENU");
-                return "? Hola! ¿Desea *Registrar turno* o *Consultar turno*?";
+                return "Hola! ¿Desea *Registrar turno* o *Consultar turno*?";
 // 
 //            case "MENU":
 //                if (body.contains("registrar")) {
