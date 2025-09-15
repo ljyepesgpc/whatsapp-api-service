@@ -1,16 +1,16 @@
 # ============================
 # STAGE 1: Build
 # ============================
-FROM maven:3.9.6-eclipse-temurin-21 AS builder
+FROM maven:3.9.6-eclipse-temurin-8 AS builder
 
-# Set working directory
+# Directorio de trabajo
 WORKDIR /app
 
-# Copiar pom.xml y descargar dependencias primero (cache)
+# Copiar pom.xml y descargar dependencias primero (para cachear)
 COPY pom.xml .
 RUN mvn dependency:go-offline -B
 
-# Copiar el cÃ³digo fuente
+# Copiar el código fuente
 COPY src ./src
 
 # Compilar y empaquetar la app
@@ -19,12 +19,12 @@ RUN mvn clean package -DskipTests
 # ============================
 # STAGE 2: Runtime
 # ============================
-FROM eclipse-temurin:21-jre
+FROM eclipse-temurin:8-jre
 
 # Crear usuario no root por seguridad
 RUN useradd -m spring
 
-# Set working directory
+# Directorio de trabajo
 WORKDIR /app
 
 # Copiar el jar generado desde el stage anterior
@@ -37,4 +37,4 @@ EXPOSE 8080
 USER spring
 
 # Comando de arranque
-ENTRYPOINT ["java","-jar","app.jar"]
+ENTRYPOINT ["java",]()
