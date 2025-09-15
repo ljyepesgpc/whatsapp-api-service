@@ -4,8 +4,17 @@
  */
 package com.gpc.whatsapp.api.core.controllers;
 
+import com.gpc.whatsapp.api.core.model.response.Message;
+import com.gpc.whatsapp.api.core.model.response.WhatsAppWebhook;
+import java.util.HashMap;
+import java.util.Map;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
  
 @RestController
 @RequestMapping("/webhook/whatsapp")
@@ -30,57 +39,55 @@ public class WhatsAppWebhookController {
     }
     
     @PostMapping
-    public String recibirMensaje(@RequestBody String payload) {
-       System.out.println("Mensaje entrante: " + payload);
-        String estado = "INICIO";//ConversacionManager.getEstado(telefono);
-       
- 
-        switch (estado) {
-            case "INICIO":
-//                ConversacionManager.setEstado(telefono, "MENU");
-                return "Hola! ¿Desea *Registrar turno* o *Consultar turno*?";
-// 
-//            case "MENU":
-//                if (body.contains("registrar")) {
-//                    ConversacionManager.setEstado(telefono, "ROL");
-//                    return "Seleccione el rol que hizo hoy: [Operador, Supervisor]";
-//                } else if (body.contains("consultar")) {
-//                    var ultimo = registroRepo.findTopByTelefonoOrderByFechaDesc(telefono);
-//                    String turnoInfo = (ultimo != null)
-//                            ? "Su último turno fue: " + ultimo.getTurno() + " en rol " + ultimo.getRol()
-//                            : "No tiene turnos registrados.";
-//                    ConversacionManager.setEstado(telefono, "FINAL");
-//                    return turnoInfo + "\n¿Desea registrar otro turno o finalizar?";
-//                } else {
-//                    return "Por favor escriba *Registrar* o *Consultar*.";
-//                }
-// 
-//            case "ROL":
-//                ConversacionManager.setEstado(telefono, "TURNO");
-//                return "Seleccione el turno: [Mañana, Tarde, Noche]";
-// 
-//            case "TURNO":
-//                RegistroTurno reg = new RegistroTurno();
-//                reg.setTelefono(telefono);
-//                reg.setRol("Operador"); // ⚠️ aquí deberías guardar el rol real elegido
-//                reg.setTurno(body);
-//                registroRepo.save(reg);
-// 
-//                ConversacionManager.setEstado(telefono, "FINAL");
-//                return "✅ Registro guardado. ¿Desea registrar otro turno o finalizar?";
-// 
-//            case "FINAL":
-//                if (body.contains("otro")) {
-//                    ConversacionManager.setEstado(telefono, "MENU");
-//                    return "¿Desea *Registrar turno* o *Consultar turno*?";
-//                } else {
-//                    ConversacionManager.reset(telefono);
-//                    return "Gracias 🙌, la conversación ha finalizado. Escriba *Hola* para empezar de nuevo.";
-//                }
- 
-            default:
-//                ConversacionManager.reset(telefono);
-                return "No entendí , escriba *Hola* para comenzar.";
+    public String recibirMensaje(@RequestBody WhatsAppWebhook webhook) {
+        if (webhook.getValue() != null &&
+            webhook.getValue().getMessages() != null &&
+            !webhook.getValue().getMessages().isEmpty()) {
+
+            Message message = webhook.getValue().getMessages().get(0);
+            String from = message.getFrom();
+            String body = message.getText().getBody();
+
+            System.out.println("Mensaje recibido de " + from + ": " + body);
+            enviarTexto(from, "hola mundo");
+        }
+       return "OK";
+    }
+    
+    public void enviarTexto(String to, String mensaje) {
+        try {
+            String url = "https://graph.facebook.com/v23.0/728695723670491/messages";
+
+            RestTemplate restTemplate = new RestTemplate();
+
+            Map<String, Object> body = new HashMap<>();
+            body.put("messaging_product", "whatsapp");
+            body.put("to", to);
+
+            Map<String, String> text = new HashMap<>();
+            text.put("body", mensaje);
+
+            body.put("text", text);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.setBearerAuth("EAFcSIOLmYFUBPc5FMpgkdX6CpaQORnPtgXjPc1dr248ZA1eI3FxV4jA5t4uvUsYfIZBfsNDzC4qTF7okYheUPghAC2gH2m2JyncVk9FVtBDZCuSePRLVARDMSfAtUaHpZBjsSlvTWK26PbehF5n4feQlNuZCuZBgMkZBjkDVakDMB1cFCDxocMunWSkoow7ZC0iZAS8ZBQbrHRYIE4KO3uVezDgIev8YEkv8asOixRXUGnp1yubgZDZD");
+
+            HttpEntity<Map<String, Object>> request = new HttpEntity<>(body, headers);
+
+            ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
+
+            System.out.println("Respuesta de Meta: " + response.getBody());
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
+
+
+
+
+
+
+
